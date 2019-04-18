@@ -18,27 +18,36 @@ td, th {
 </style>
 </head>
 <body>
-	<h3>회원 명단</h3>
-	<hr>
-	<table border="1" style="border-collapse: collapse;">
-		<tr>
-			<th>아이디</th>
-			<th>이름</th>
-			<th>생일</th>
-			<th>주소</th>
-		</tr>
-		<%
-			for (MemberDTO member : list) {
-		%>
-		<tr>
-			<td><%=member.getId()%></td>
-			<td><%=member.getName()%></td>
-			<td><%=member.getBirthday()%></td>
-			<td><%=member.getAddress()%></td>
-		</tr>
-		<%
-			}
-		%>
-	</table>
+	<center>
+		<h2>회원 명단</h2>
+		<hr>
+		<table border="1" style="border-collapse: collapse;">
+			<tr bgcolor="violet">
+				<th>아이디</th>
+				<th>이름</th>
+				<th>생일</th>
+				<th>주소</th>
+				<th>수정</th>
+			</tr>
+			<%
+				for (MemberDTO member : list) {
+			%>
+			<tr>
+				<td><%=member.getId()%></td>
+				<td><%=member.getName()%></td>
+				<td><%=member.getBirthday()%></td>
+				<td><%=member.getAddress()%></td>
+				<%
+				//	action을 parameta로 받음
+					String uri = "memberProcServlet?action=update&id="+member.getId();
+					
+				%>
+				<td>&nbsp;<button onclick="location.href='<%=uri%>'">수정</button>&nbsp;</td>
+			</tr>
+			<%
+				}
+			%>
+		</table>
+	</center>
 </body>
 </html>

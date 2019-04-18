@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="member.*"%>
-<%request.setCharacterEncoding("UTF-8"); %>
+<%
+	request.setCharacterEncoding("UTF-8");
+%>
 <jsp:useBean id="member" scope="page" class="member.MemberDTO" />
 <jsp:setProperty name="member" property="*" />
 <%
@@ -11,8 +13,8 @@
 	mDao.close();
 	response.sendRedirect("loginMain.jsp");
 %>
-	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-	<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>registerProc</title>
@@ -20,4 +22,4 @@
 <body>
 
 </body>
-	</html>
+</html>
