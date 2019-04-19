@@ -21,13 +21,13 @@ td, th {
 	<center>
 		<h2>회원 명단</h2>
 		<hr>
-		<table border="1" style="border-collapse: collapse;">
-			<tr bgcolor="violet">
+		<table border="1" bordercolor="#1827CA" bgcolor="#D0A9F5" style="border-collapse: collapse;">
+			<tr bgcolor="#E3CEF6">
 				<th>아이디</th>
 				<th>이름</th>
 				<th>생일</th>
 				<th>주소</th>
-				<th>수정</th>
+				<th>액션</th>
 			</tr>
 			<%
 				for (MemberDTO member : list) {
@@ -38,11 +38,12 @@ td, th {
 				<td><%=member.getBirthday()%></td>
 				<td><%=member.getAddress()%></td>
 				<%
-				//	action을 parameta로 받음
-					String uri = "memberProcServlet?action=update&id="+member.getId();
-					
+					//	action을 parameta로 받음
+					String  updateUri = "memberProcServlet?action=update&id="+member.getId();
+					String  deleteUri = "memberProcServlet?action=delete&id="+member.getId();
 				%>
-				<td>&nbsp;<button onclick="location.href='<%=uri%>'">수정</button>&nbsp;</td>
+				<td>&nbsp;<button onclick="location.href='<%=updateUri%>'">수정</button>&nbsp;
+				<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;</td>
 			</tr>
 			<%
 				}

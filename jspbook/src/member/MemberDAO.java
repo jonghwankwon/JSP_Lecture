@@ -60,6 +60,7 @@ public class MemberDAO {
 		return DATABASE_ERROR;
 	}
 	
+	//Password 초기화
 	public void initPassword() {
     	List<MemberDTO> mList = selectAll();
     	for (MemberDTO member: mList) {
@@ -71,11 +72,12 @@ public class MemberDAO {
     }
 	
 	//생성
+	//password는 "*" 모양으로 출력
 	public void insertMember(MemberDTO member) {
 		String query = "insert into member(password, name, birthday, address, hashed) values (?, ?, ?, ?, ?);";
 		PreparedStatement pStmt = null;
 		try {
-			String hashedPassword = BCrypt.hashpw(member.getPassword(), BCrypt.gensalt());
+			String hashedPassword = BCrypt.hashpw(member.getPassword(), BCrypt.gensalt());	
 			pStmt = conn.prepareStatement(query);
 			pStmt.setString(1, "*");
 			pStmt.setString(2, member.getName());

@@ -17,19 +17,42 @@ public class MemberProc extends HttpServlet {
         super();
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		MemberDAO mDao = null;
+		RequestDispatcher rd = null;
+		int id = 0;
 		String action = request.getParameter("action");
+		if (!request.getParameter("id").equals("")) {
+			id = Integer.parseInt(request.getParameter("id"));
+		}
+		/*String action = request.getParameter("action");
 		String strId = request.getParameter("id");
-		System.out.println(action + ", " + strId);
+		System.out.println(action + ", " + strId);*/
+		
 		//정보 수정
 		switch (action) {
 		case "update":
-			MemberDAO mDao = new MemberDAO();
-			MemberDTO member = mDao.searchById(Integer.parseInt(strId));
-//			System.out.println(member.toString());
+			mDao = new MemberDAO();
+			MemberDTO member = mDao.searchById(id);
+//			System.out.println(member.toString());	// 오류의 위치를 알아내기위해 사용
+			mDao.close();
 			request.setAttribute("member", member);
-			RequestDispatcher rd = request.getRequestDispatcher("update.jsp");
+			rd = request.getRequestDispatcher("update.jsp");
 	        rd.forward(request, response);
-	        mDao.close();
+	        break;
+	        
+		case "delete": //삭제 버튼 클릭 시
+			mDao = new MemberDAO();
+			mDao.deleteMember(id);
+			mDao.close();
+			//response.sendRedirect("loginMain.jsp");
+			String message = "id [" + id + "]가 삭제 되었습니다.";
+			String url = "loginMain.jsp";
+			request.setAttribute("message", message);
+			request.setAttribute("url", url);
+			rd = request.getRequestDispatcher("alertMsg.jsp");
+			rd.forward(request, response);
+			break;
+			
 		default:
 		}
 	}
