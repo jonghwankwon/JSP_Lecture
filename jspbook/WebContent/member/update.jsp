@@ -18,27 +18,25 @@ label span {
 <body>
 	<center>
 		<%
-			MemberDTO member = (MemberDTO) request.getAttribute("member");
-		%>
-		<h2>회원 수정</h2>
-		<hr>
-		<form name="registerForm" action=/jspbook/member/updateMemberServlet method=post>
-			<input type="hidden" id="id" name="id" value="<%=member.getId()%>">
-			<label><span>아이디:</span>
+	//request.setCharacterEncoding("UTF-8");
+	MemberDTO member = (MemberDTO) request.getAttribute("member");
+%>
+	<h3>회원 수정</h3>
+	<hr>
+	<!-- <form name="updateForm" action="/jspbook/member/updateMemberServlet" method=post> -->
+	<form name="updateForm" action="/jspbook/member/memberProcServlet?action=execute" method=post>
+		<input type="hidden" id="id" name="id" value="<%=member.getId()%>"><br>
+		<label><span>아이디:</span>
 			<%=member.getId()%></label><br>
-
-			<label><span>이름:</span>
-			<input type="text" name="name" value="<%=member.getName()%>" size="10"></label> <br>
-		
-			<label><span>생일:</span>
-			<input type="text" name="birthday" value="<%=member.getBirthday()%>"size="10"></label><br> 
-			
-			<label><span>주소:</span>
-			<input type="text" name="address" value="<%=member.getAddress() %> " size="10"></label><br> 
-			
-			<label><span><input type="submit" value="정보 수정" name="B1">&nbsp;&nbsp;</span></label> 
-			<label><span><input type="reset" value="재작성" name="B2"></span></label>
-		</form>
+		<label><span>이름:</span>
+			<input type="text" name="name" value="<%=member.getName()%>" size="10"></label><br>
+		<label><span>생일:</span>
+			<input type="text" name="birthday" value="<%=member.getBirthday()%>" size="10"></label><br>
+		<label><span>주소:</span>
+			<input type="text" name="address" value="<%=member.getAddress()%>" size="30"></label><br>
+		<label><span></span><input type="submit" value="회원 수정" name="B1">&nbsp;&nbsp;
+			<input type="reset" value="재작성" name="B2"></label>
+	</form>
 	</center>
 </body>
 </html>

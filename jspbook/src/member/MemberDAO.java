@@ -73,7 +73,7 @@ public class MemberDAO {
 	
 	//생성
 	//password는 "*" 모양으로 출력
-	public void insertMember(MemberDTO member) {
+	public  void insertMember(MemberDTO member) {
 		String query = "insert into member(password, name, birthday, address, hashed) values (?, ?, ?, ?, ?);";
 		PreparedStatement pStmt = null;
 		try {
@@ -165,6 +165,12 @@ public class MemberDAO {
 		}	
 	}
 	//조회
+	public MemberDTO recentId() {
+    	String sql = "select * from member order by id desc limit 1;";
+    	MemberDTO mDto = selectOne(sql);
+    	return mDto;
+    }
+	
 	public MemberDTO searchById(int memberId) {
 		String sql = "select * from member where id=" + memberId + ";";
 		MemberDTO mDto = selectOne(sql);

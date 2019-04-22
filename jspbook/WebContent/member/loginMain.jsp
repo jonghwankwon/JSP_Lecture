@@ -20,6 +20,8 @@ td, th {
 <body>
 	<center>
 		<h2>회원 명단</h2>
+		<%=session.getAttribute("memberName")%> 회원님 반갑습니다.<br>
+		<a href="/jspbook/member/memberProcServlet?action=logout">로그아웃</a>
 		<hr>
 		<table border="1" bordercolor="#1827CA" bgcolor="#D0A9F5" style="border-collapse: collapse;">
 			<tr bgcolor="#E3CEF6">

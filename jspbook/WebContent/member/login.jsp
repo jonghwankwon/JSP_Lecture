@@ -16,20 +16,20 @@ label span {
 </head>
 <%
 	// loginProc.jsp를 보고 getParameter/getAttribute 정하기
-	String error = (String) request.getParameter("error");	//Parameter로 받을 때 
+		String error = request.getParameter("error");//Parameter로 받을 때 
 //	String error = (String) request.getAttribute("error");	//Attribute로 받을 때
 	if (error != null) {
-		System.out.println(error);
+		//System.out.println(error);
 		out.println("<script>alert('" + error + "')</script>");
 	}
 %>
-<center>
+<center>	
 	<br>
 	<h3>Member Login</h3>
 	<br>
 	<hr>
-	<form name="loginForm" action=/jspbook/member/loginProcServlet
-		method=post>
+	<!-- <form name="loginForm" action=/jspbook/member/loginProcServlet method=post> -->
+	<form name="loginForm" action="/jspbook/member/memberProcServlet?action=login"  method=post>
 		<label><span>ID:</span> <input type="text" name="id" size="10"></label>
 		<label><span>Password:</span> <input type="password"
 			name="password" size="10"></label><br> <input type="submit"

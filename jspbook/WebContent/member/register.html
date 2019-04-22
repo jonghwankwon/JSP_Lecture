@@ -15,15 +15,19 @@ label span {
 <body>
 	<h2>회원가입</h2>
 	<hr>
-	<form name="registerForm" action=/jspbook/member/registerProcServlet
-		method=post>
-		<label><span>Password:</span> <input type="password"
-			name="password" size="10"></label><br> <label><span>이름:</span>
-			<input type="text" name="name" size="10"></label><br> <label><span>생일:</span>
-			<input type="text" name="birthday" size="10"></label><br> <label><span>주소:</span>
-			<input type="text" name="address" size="10"></label><br> <label><span></span>
-			<input type="submit" value="회원 가입" name="B1">&nbsp;&nbsp; <input
-			type="reset" value="재작성" name="B2"></label>
+	<!-- <form name="registerForm" action=/jspbook/member/registerProcServlet method=post> -->
+	<form name="registerForm" action="/jspbook/member/memberProcServlet?action=register" method=post>
+		<label><span>Password:</span>
+			<input type="password" name="password" size="10"></label><br>
+		<label><span>이름:</span>
+			<input type="text" name="name" size="10"></label><br>
+		<label><span>생일:</span>
+			<input type="text" name="birthday" size="10"></label><br>
+		<label><span>주소:</span>
+			<input type="text" name="address" size="40"></label>	
+			<br>
+		<label><span></span><input type="submit" value="회원 가입" name="B1">&nbsp;&nbsp;
+			<input type="reset" value="재작성" name="B2"></label>
 	</form>
 </body>
 </html>
