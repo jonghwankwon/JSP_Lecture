@@ -13,7 +13,7 @@
 	//세션에 저장된 로그인 사용자 이름을 가지고 옴
 	Object username = session.getAttribute("user");
 	
-	//메세지 저장을 위해 application에서 msgs로 저장된 ArrayList 가지고 옴
+	//메세지 저장을 위해 application(내장객체)에서 msgs로 저장된 ArrayList 가지고 옴
 	ArrayList<String> msgs = (ArrayList<String>)application.getAttribute("msgs");
 	
 	//null인 경우 새로운 ArrayList 객체를 생성

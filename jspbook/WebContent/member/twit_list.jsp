@@ -19,10 +19,11 @@
 <body>
 	<div align="center">
 		<h2>My Simple Twitter!!</h2>
+		<a href="loginMain.jsp">회원 목록으로</a>
 		<hr>
-		<form action="tweet.jsp" method="POST">
+		<form action="/jspbook/member/twitServlet" method="POST">
 		<!-- 세션에 저장된 이름 출력 -->
-		@<%=session.getAttribute("user") %><input type="text" name="msg">
+		@<%=session.getAttribute("memberName")%><input type="text" name="msg">
 		<input type="submit" value="Tweet">
 		</form>
 		<hr>

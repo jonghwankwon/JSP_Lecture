@@ -20,11 +20,19 @@ public class MemberProc extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doAction(request, response);
+		/*		String uri = request.getRequestURI();
+			String conPath = request.getContextPath();
+			String command = uri.substring(conPath.length());
+			System.out.println("doGet(): " + uri + ", " + conPath + ", " + command);
+		 */		doAction(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doAction(request, response);
+		/*		String uri = request.getRequestURI();
+			String conPath = request.getContextPath();
+			String command = uri.substring(conPath.length());
+			System.out.println("doPost(): " + uri + ", " + conPath + ", " + command);
+		 */		doAction(request, response);
 	}
 
 	protected void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -39,7 +47,7 @@ public class MemberProc extends HttpServlet {
 		String message = null;
 		String url = null;
 		request.setCharacterEncoding("UTF-8");
-		HttpSession session = request.getSession(); //session을 알아내기위함
+		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
 
 		switch(action) {
@@ -47,9 +55,7 @@ public class MemberProc extends HttpServlet {
 			if (!request.getParameter("id").equals("")) {
 				id = Integer.parseInt(request.getParameter("id"));
 			}
-			if(id != (Integer)session.getAttribute("memberId")){
-				System.out.println("수정 권한이 없습니다.");
-				response.sendRedirect("loginMain.jsp");// 권한이 없을 시 메인화면으로
+			if (id != (Integer)session.getAttribute("memberId")) {
 				message = "id = " + id + " 에 대한 수정 권한이 없습니다.";
 				url = "loginMain.jsp";
 				request.setAttribute("message", message);
@@ -79,91 +85,103 @@ public class MemberProc extends HttpServlet {
 				rd.forward(request, response);
 				break;
 			}
-			
-			case "login":		// login 할 때
-				if (!request.getParameter("id").equals("")) {
-					id = Integer.parseInt(request.getParameter("id"));
-				}
-				password = request.getParameter("password");
+			mDao = new MemberDAO();
+			mDao.deleteMember(id);
+			mDao.close();
+			//response.sendRedirect("loginMain.jsp");
+			message = "id = " + id + " 이/가 삭제되었습니다.";
+			url = "loginMain.jsp";
+			request.setAttribute("message", message);
+			request.setAttribute("url", url);
+			rd = request.getRequestDispatcher("alertMsg.jsp");
+			rd.forward(request, response);
 
-				mDao = new MemberDAO();
-				int result = mDao.verifyIdPassword(id, password);
-				String errorMessage = null;
-				switch (result) {
-				case MemberDAO.ID_PASSWORD_MATCH:
-					break;
-				case MemberDAO.ID_DOES_NOT_EXIST:
-					errorMessage = "ID가 없음"; break;
-				case MemberDAO.PASSWORD_IS_WRONG:
-					errorMessage = "패스워드가 틀렸음"; break;
-				case MemberDAO.DATABASE_ERROR:
-					errorMessage = "DB 오류";
-				}
-				if (result == MemberDAO.ID_PASSWORD_MATCH) {
-					member = mDao.searchById(id);
-					session.setAttribute("memberId", id);
-					session.setAttribute("memberName", member.getName());
-					response.sendRedirect("loginMain.jsp");
-				} else {
-					String uri = "login.jsp?error=" + URLEncoder.encode(errorMessage, "UTF-8");
-					response.sendRedirect(uri); 
-				}
-				mDao.close();
-				break;
-				
-			case "logout":	//로그아웃 할 때
-				session.removeAttribute("memberId");
-				session.removeAttribute("memberName");
-				response.sendRedirect("login.jsp");
-				break;
-
-			case "register":		// 회원 등록할 때
-				password = request.getParameter("password");
-				name = request.getParameter("name");
-				birthday = request.getParameter("birthday");
-				address = request.getParameter("address");
-				member = new MemberDTO(password, name, birthday, address);
-				System.out.println(member.toString());
-
-				mDao = new MemberDAO();
-				mDao.insertMember(member);
-				member = mDao.recentId();
-				session.setAttribute("memberId", member.getId());
-				session.setAttribute("memberName", name);
-				
-				message = "귀하의 아이디는 "+ member.getId() +" 입니다";
-				url = "loginMain.jsp";
-				request.setAttribute("message", message);
-				request.setAttribute("url", url);
-				rd = request.getRequestDispatcher("alertMsg.jsp");
-				rd.forward(request, response);
-				mDao.close();
-				break;
-
-			case "execute":
-				if (!request.getParameter("id").equals("")) {
-					id = Integer.parseInt(request.getParameter("id"));
-				}
-				name = request.getParameter("name");
-				birthday = request.getParameter("birthday");
-				address = request.getParameter("address");
-
-				member = new MemberDTO(id, "*", name, birthday, address);
-				System.out.println(member.toString());
-
-				mDao = new MemberDAO();
-				mDao.updateMember(member);
-				mDao.close();
-
-				message = "다음과 같이 수정하였습니다.\\n" + member.toString();
-				request.setAttribute("message", message);
-				request.setAttribute("url", "loginMain.jsp");
-				rd = request.getRequestDispatcher("alertMsg.jsp");
-				rd.forward(request, response);
-				//response.sendRedirect("loginMain.jsp");
-				break;
-
-			default:
+		case "login":		// login 할 때
+			if (!request.getParameter("id").equals("")) {
+				id = Integer.parseInt(request.getParameter("id"));
 			}
+			password = request.getParameter("password");
+
+			mDao = new MemberDAO();
+			int result = mDao.verifyIdPassword(id, password);
+			String errorMessage = null;
+			switch (result) {
+			case MemberDAO.ID_PASSWORD_MATCH:
+				break;
+			case MemberDAO.ID_DOES_NOT_EXIST:
+				errorMessage = "ID가 없음"; break;
+			case MemberDAO.PASSWORD_IS_WRONG:
+				errorMessage = "패스워드가 틀렸음"; break;
+			case MemberDAO.DATABASE_ERROR:
+				errorMessage = "DB 오류"; 
+			}
+
+			if (result == MemberDAO.ID_PASSWORD_MATCH) {
+				member = mDao.searchById(id);
+				session.setAttribute("memberId", id);
+				session.setAttribute("memberName", member.getName());
+				response.sendRedirect("loginMain.jsp");
+			} else {
+				String uri = "login.jsp?error=" + URLEncoder.encode(errorMessage, "UTF-8");
+				//org.apache.jasper.runtime.JspRuntimeLibrary.URLEncode(String.valueOf(errorMessage), request.getCharacterEncoding());
+				response.sendRedirect(uri); 
+			}
+			mDao.close();
+			break;
+
+		case "logout":			// 로그아웃할 때
+			session.removeAttribute("memberId");
+			session.removeAttribute("memberName");
+			response.sendRedirect("login.jsp");
+			break;
+
+		case "register":		// 회원 등록할 때
+			password = request.getParameter("password");
+			name = request.getParameter("name");
+			birthday = request.getParameter("birthday");
+			address = request.getParameter("address");
+			member = new MemberDTO(password, name, birthday, address);
+			System.out.println(member.toString());
+
+			mDao = new MemberDAO();
+			mDao.insertMember(member);
+			member = mDao.recentId();
+			session.setAttribute("memberId", member.getId());
+			session.setAttribute("memberName", name);
+
+			message = "귀하의 아이디는 " + member.getId() + " 입니다.";
+			url = "loginMain.jsp";
+			request.setAttribute("message", message);
+			request.setAttribute("url", url);
+			rd = request.getRequestDispatcher("alertMsg.jsp");
+			rd.forward(request, response);
+			mDao.close();
+			break;
+
+		case "execute":			// 회원 수정정보 입력 후 실행할 때
+			if (!request.getParameter("id").equals("")) {
+				id = Integer.parseInt(request.getParameter("id"));
+			}
+			name = request.getParameter("name");
+			birthday = request.getParameter("birthday");
+			address = request.getParameter("address");
+
+			member = new MemberDTO(id, "*", name, birthday, address);
+			System.out.println(member.toString());
+
+			mDao = new MemberDAO();
+			mDao.updateMember(member);
+			mDao.close();
+
+			message = "다음과 같이 수정하였습니다.\\n" + member.toString();
+			request.setAttribute("message", message);
+			request.setAttribute("url", "loginMain.jsp");
+			rd = request.getRequestDispatcher("alertMsg.jsp");
+			rd.forward(request, response);
+			//response.sendRedirect("loginMain.jsp");
+			break;
+
+		default:
 		}
 	}
+}

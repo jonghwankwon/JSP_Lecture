@@ -4,7 +4,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
 <title>회원 가입</title>
 <style>
 label span {
@@ -18,7 +17,7 @@ label span {
 <body>
 	<center>
 		<%
-	//request.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 	MemberDTO member = (MemberDTO) request.getAttribute("member");
 %>
 	<h3>회원 수정</h3>
