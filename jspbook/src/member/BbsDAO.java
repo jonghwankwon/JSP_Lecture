@@ -50,6 +50,30 @@ public class BbsDAO {
 			}
 		}	
 	}
+	//
+	public int getCount() {
+		String query = "select count(*) from bbs;";
+		PreparedStatement pStmt = null;
+		int count = 0;
+		try {
+			pStmt = conn.prepareStatement(query);
+			ResultSet rs = pStmt.executeQuery();
+			while (rs.next()) {				
+				count = rs.getInt(1);
+			}
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pStmt != null && !pStmt.isClosed()) 
+					pStmt.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return count;
+	}
 	// 글쓰기
 	public void writeBbs(BbsDTO bDto) {
 		PreparedStatement pStmt = null;
@@ -177,14 +201,20 @@ public class BbsDAO {
 				return bmDto;
 	}
 
-	public List<BbsMember> selectJoinAll(int number) {
-		String query = "select bbs.id, bbs.title, member.name, bbs.date, bbs.content from bbs " + 
-				"inner join member on bbs.memberId=member.id order by bbs.id desc limit ?;";
+	public List<BbsMember> selectJoinAll(int page) {
+		int offset = 0;
+		String query = null;
+		if(page == 0) {
+			query = "select bbs.id, bbs.title, member.name, bbs.date, bbs.content from bbs \" + \r\n" + 
+					"			\"inner join member on bbs.memberId=member.id order by bbs.id desc limit ?, 10;";
+			offset = (page -1) * 10;
+		}
 		PreparedStatement pStmt = null;
 		List<BbsMember> bmList = new ArrayList<BbsMember>();
 		try {
 			pStmt = conn.prepareStatement(query);
-			pStmt.setInt(1, number);
+			if(page != 0)
+				pStmt.setInt(1, offset);
 			ResultSet rs = pStmt.executeQuery();
 			while (rs.next()) {	
 				BbsMember bmDto = new BbsMember();
@@ -192,7 +222,6 @@ public class BbsDAO {
 				bmDto.setTitle(rs.getString(2));
 				bmDto.setName(rs.getString(3));
 				bmDto.setDate(rs.getString(4));
-				bmDto.setContent(rs.getString(5));
 				bmList.add(bmDto);
 			}
 			rs.close();
@@ -233,6 +262,7 @@ public class BbsDAO {
 		return ts;
 	}
 
+	
 	public void close() {
 		try {
 			if (conn != null && !conn.isClosed())

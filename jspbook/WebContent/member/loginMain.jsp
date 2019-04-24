@@ -12,8 +12,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>메인 페이지</title>
 <style>
-td, th {
+table {
+	width: 100%;
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+}
+th, td {
+	border-bottom: 1px solid #444444;
+	padding: 10px;
 	text-align: center;
+}
+
+th:nth-child(2n), td:nth-child(2n) {
+	background-color: #bbdefb;
+}
+
+th:nth-child(2n+1), td:nth-child(2n+1) {
+	background-color: #e3f2fd;
 }
 </style>
 </head>

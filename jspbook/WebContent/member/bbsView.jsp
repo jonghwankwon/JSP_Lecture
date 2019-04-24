@@ -1,19 +1,13 @@
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
-<%
-	BbsDAO bDao = new BbsDAO();
-	List<BbsMember> contentList = bDao.selectJoinAll(10);
-	bDao.close();
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>bbsupdate.jsp</title>
+<title>bbsView</title>
 <style type="text/css">
 table {
-	width: 50%;
+	width: 80%;
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
 }
@@ -34,17 +28,14 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 </style>
 </head>
 <body>
-	<center>
+<div align="center">
 		<%
 			request.setCharacterEncoding("UTF-8");
 			BbsDTO bbs = (BbsDTO) request.getAttribute("bDto");
 			System.out.println(bbs.toString());
 		%>
-		<h2>글 수정</h2>
+		<h2>게시글 상세보기</h2>
 		<hr>
-		<form name="bbsupdateForm" action="/jspbook/member/bbsProcServlet" method="post">
-		<input type="hidden" id="id" name="id" value="<%=bbs.getId()%>">
-		<input type="hidden" id="action" name="action" value="excute">
 			<table border="1">
 				<tr>
 					<th>항목</th>
@@ -56,7 +47,7 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 				</tr>
 				<tr>
 					<th>제목</th>
-					<td><input type="text" name="title" value="<%=bbs.getTitle()%>" size="10"></td>
+					<td><%=bbs.getTitle()%></td>
 				</tr>
 				<tr>
 					<th>글쓴이</th>
@@ -68,17 +59,19 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea name="content" rows="5" cols="40"><%=bbs.getContent()%></textarea></td>
+					<td><%=bbs.getContent()%></td>
 				</tr>
 				<tr>
+					<%
+					String  updateUri = "bbsProcServlet?action=update&id="+bbs.getId();
+					String  deleteUri = "bbsProcServlet?action=delete&id="+bbs.getId();
+					%>
 					<td colspan="2">
-					<input type="submit" value="수정 완료" name="B1">&nbsp;&nbsp;
-					<input type="reset" value="재수정" name="B2">&nbsp;&nbsp; 
-					<input type=button value="뒤로가기" name="B3" onClick="history.back()">
-					</td>
+				<button onclick="location.href='<%=updateUri%>'">수정</button>&nbsp;
+				<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;
+				<input type=button value="뒤로가기" name="B3" onClick="history.back()"></td>
 				</tr>
 			</table>
-		</form>
-	</center>
+	</div>
 </body>
 </html>

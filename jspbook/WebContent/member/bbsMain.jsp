@@ -11,9 +11,24 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>bbsMain.jsp</title>
 <style>
-td, th {
-	width: auto;
+table {
+	width: 50%;
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+}
+
+th, td {
+	border-bottom: 1px solid #444444;
+	padding: 10px;
 	text-align: center;
+}
+
+th:nth-child(2n), td:nth-child(2n) {
+	background-color: #bbdefb;
+}
+
+th:nth-child(2n+1), td:nth-child(2n+1) {
+	background-color: #e3f2fd;
 }
 </style>
 </head>
@@ -21,43 +36,41 @@ td, th {
 	<div align="center">
 		<h2>게시판</h2>
 		<hr>
-		<form action="/jspbook/member/bbsServlet" method="POST">
-			<table border="1" style="border-collapse: collapse;">
-				<tr bgcolor="#E3CEF6">
-					<th>글번호</th>
-					<th>작성자</th>
-					<th>제목</th>
-					<th>작성내용</th>
-					<th>작성날짜</th>
-					<th>옵션</th>
-				</tr>
+		<table border="1" style="border-collapse: collapse;">
+			
+			<tr>
+				<th>글번호</th>
+				<th>작성자</th>
+				<th>제목</th>
+				<th>작성날짜</th>
+				<th>옵션</th>
+			</tr>
+			<%
+				for (BbsMember bbs : contentList) {
+			%>
+			<tr>
+				<td><%=bbs.getId()%></td>
+				<td><%=bbs.getName()%></td>
+				<td><a href="bbsProcServlet?action=view&id=<%=bbs.getId()%>"><%=bbs.getTitle()%></a></td>
+				<td><%=bbs.getDate()%></td>
 				<%
-					for (BbsMember bbs : contentList) {
+					//	action을 parameta로 받음
+						String bbsupdateUri = "bbsProcServlet?action=update&id=" + bbs.getId();
+						String bbsdeleteUri = "bbsProcServlet?action=delete&id=" + bbs.getId();
+						//System.out.println("bbsMain: " + bbsupdateUri);
 				%>
-				<tr>
-					<td><%=bbs.getId()%></td>
-					<td><%=bbs.getName()%></td>
-					<td><%=bbs.getTitle()%></td>
-					<td><%=bbs.getContent()%></td>
-					<td><%=bbs.getDate()%></td>
-					<%
-						//	action을 parameta로 받음
-							String updateUri = "memberProcServlet?action=bbsUpdate&id=" + bbs.getId();
-							String deleteUri = "memberProcServlet?action=bbsdelete&id=" + bbs.getId();
-					%>
-					<td>&nbsp;
-						<button onclick="location.href='<%=updateUri%>'">수정</button>&nbsp;
-						<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;
-					</td>
-				</tr>
-				<%
-					}
-				%>
-			</table>
-			<br> <a href="bbsWrite.jsp">글쓰기</a>&nbsp;&nbsp;&nbsp; <a
-				href="loginMain.jsp">돌아가기</a>
-			<hr>
-		</form>
+				<td>&nbsp;
+					<button onclick="location.href='<%=bbsupdateUri%>'">수정</button>&nbsp;
+					<button onclick="location.href='<%=bbsdeleteUri%>'">삭제</button>&nbsp;
+				</td>
+			</tr>
+			<%
+				}
+			%>
+		</table>
+		<br> <a href="bbsWrite.jsp">글쓰기</a>&nbsp;&nbsp;&nbsp; 
+		<a href="loginMain.jsp">뒤로가기</a>
+		<hr>
 	</div>
 </body>
 </html>

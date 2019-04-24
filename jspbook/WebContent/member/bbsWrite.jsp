@@ -1,5 +1,11 @@
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8" import="member.*"%>
+	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
+<%
+	BbsDAO bDao = new BbsDAO();
+	List<BbsMember> contentList = bDao.selectJoinAll(10);
+	bDao.close();
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -31,7 +37,7 @@ label span {
 			<label><span></span><br> <input type="submit"
 				value="작성완료" name="B1">&nbsp;&nbsp;&nbsp;&nbsp; <input
 				type="reset" value="재작성" name="B2">&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type=button value="되돌아가기" onClick="history.back()"></label>
+				<input type=button value="뒤로가기" onClick="history.back()"></label>
 		</form>
 	</center>
 </body>

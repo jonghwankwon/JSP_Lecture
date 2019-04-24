@@ -178,9 +178,8 @@ public class MemberProc extends HttpServlet {
 			request.setAttribute("url", "loginMain.jsp");
 			rd = request.getRequestDispatcher("alertMsg.jsp");
 			rd.forward(request, response);
-			//response.sendRedirect("loginMain.jsp");
 			break;
-
+			
 		default:
 		}
 	}
