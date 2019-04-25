@@ -1,11 +1,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
-<%
-	request.setCharacterEncoding("UTF-8");
-	List<BbsMember> bmList = (List<BbsMember>) request.getAttribute("bbsMemberList");
-	List<String> pageList = (List<String>) request.getAttribute("pageList");
-%>
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -35,44 +31,38 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 <body>
 	<div align="center">
 		<h2>게시판</h2>
-		<%=(String) session.getAttribute("memberName")%>
-		회원님 반갑습니다.<br> <a href="bbsWrite.jsp">글쓰기</a>&nbsp;&nbsp; <a
-			href="twit_list.jsp">트윗</a>&nbsp;&nbsp; <a href="loginMain.jsp">회원목록</a>&nbsp;&nbsp;
+		${memberName} 회원님 반갑습니다.<br> 
+		<a href="bbsWrite.jsp">글쓰기</a>&nbsp;&nbsp; 
+		<a href="twit_list.jsp">트윗</a>&nbsp;&nbsp; 
+		<a href="memberProcServlet?action=list&mpage=1">회원목록</a>&nbsp;&nbsp;
 		<a href="memberProcServlet?action=logout">로그아웃</a>
 		<hr>
-		<table border="1" style="border-collapse: collapse;" width=600>
+		<table border="1" style="border-collapse: collapse;">
 			<tr bgcolor="skyblue" height="30">
 				<th>글번호</th>
 				<th>제목</th>
 				<th>글쓴이</th>
 				<th>최종수정일</th>
-				<th>액션</th>
+				<th>옵션</th>
 			</tr>
-			<%
-				for (BbsMember bm : bmList) {
-			%>
-			<tr height="25">
-				<td><%=bm.getId()%></td>
-				<td><a href="bbsProcServlet?action=view&id=<%=bm.getId()%>"><%=bm.getTitle()%></a></td>
-				<td><%=bm.getName()%></td>
-				<td><%=bm.getDate().substring(0, 16)%></td>
-				<%
-					String updateUri = "bbsProcServlet?action=update&id=" + bm.getId();
-						String deleteUri = "bbsProcServlet?action=delete&id=" + bm.getId();
-				%>
+			<c:set var="bmList" value="${requestScope.bbsMemberList}"/>
+			<c:forEach var = "bm" items="${bmList}">  
+			<tr>
+				<td>${bm.id}</td>
+				<td><a href="bbsProcServlet?action=view&id=${bm.id}">${bm.title}</a></td>
+				<td>${bm.name}</td>
+				<td>${bm.date}</td>
 				<td>&nbsp;
-					<button onclick="location.href='<%=updateUri%>'">수정</button>&nbsp;
-					<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;
+					<button onclick="location.href='bbsProcServlet?action=update&id=${bm.id}'">수정</button>&nbsp;
+					<button onclick="location.href='bbsProcServlet?action=delete&id=${bm.id}'">삭제</button>&nbsp;
 				</td>
 			</tr>
-			<%
-				}
-			%>
+				</c:forEach>
 		</table>
-		<%
-			for (String bmPage : pageList)
-				out.print(bmPage);
-		%>
+		<c:set var="pageList" value="${requestScope.pageList}"/>
+		<c:forEach var = "pageNo" items="${pageList}"> 
+		${pageNo}
+		</c:forEach>
 	</div>
 </body>
 </html>

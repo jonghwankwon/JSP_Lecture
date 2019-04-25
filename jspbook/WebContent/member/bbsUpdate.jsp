@@ -1,9 +1,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
-<%
-	BbsMember bm = (BbsMember)request.getAttribute("bbsMember");
-%>
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -33,15 +31,13 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 </head>
 <body>
 	<center>
-		<%
-			request.setCharacterEncoding("UTF-8");
-			BbsDTO bbs = (BbsDTO) request.getAttribute("bDto");
-			System.out.println(bbs.toString());
-		%>
+		
 		<h2>글 수정</h2>
 		<hr>
-		<form name="bbsupdateForm" action="/jspbook/member/bbsProcServlet" method="post">
-		<input type="hidden" id="id" name="id" value="<%=bbs.getId()%>">
+		<!--  -->
+		<c:set var="bm" value="${requestScope.bbsMember}"/>
+		<form name="bbsupdateForm" action="bbsProcServlet?action=execute&id=${bm.id }" method=post>
+		<input type="hidden" id="id" name="id" value="${bm.id}">
 		<input type="hidden" id="action" name="action" value="excute">
 			<table border="1">
 				<tr>
@@ -50,23 +46,23 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 				</tr>
 				<tr>
 					<th>글번호</th>
-					<td><%=bbs.getId()%></td>
+					<td>${bm.id }</td>
 				</tr>
 				<tr>
 					<th>제목</th>
-					<td><input type="text" name="title" value="<%=bbs.getTitle()%>" size="10"></td>
+					<td><input type="text" name="title" value="${bm.title}" size="10"></td>
 				</tr>
 				<tr>
 					<th>글쓴이</th>
-					<td><%=session.getAttribute("memberName")%></td>
+					<td>${bm.name}</td>
 				</tr>
 				<tr>
 					<th>수정일시</th>
-					<td><%=bbs.getDate()%></td>
+					<td>${bm.date}</td>
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><textarea name="content" rows="5" cols="40"><%=bbs.getContent()%></textarea></td>
+					<td><textarea name="content" rows="5" cols="40">${bm.content}</textarea></td>
 				</tr>
 				<tr>
 					<td colspan="2">

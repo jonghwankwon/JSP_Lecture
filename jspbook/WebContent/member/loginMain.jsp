@@ -1,16 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="java.util.*"%>
 <%@ page import="member.*"%>
-<%
-	MemberDAO mDao = new MemberDAO();
-	List<MemberDTO> list = mDao.selectAll();
-	mDao.close();
-%>
-<%
-	request.setCharacterEncoding("UTF-8");
-	List<BbsMember> bmList = (List<BbsMember>) request.getAttribute("bbsMemberList");
-	List<String> pageList = (List<String>) request.getAttribute("pageList");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -19,6 +10,7 @@
 <style>
 table {
 	width: 80%;
+	height: 40%;
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
 }
@@ -39,45 +31,39 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 </style>
 </head>
 <body>
-	<center>
+	<div align="center">
 		<h2>회원 명단</h2>
-		<%=session.getAttribute("memberName")%> 회원님 반갑습니다.<br>
-		<a href="bbsProcServlet?action=list&page=1">게시판</a>&nbsp;&nbsp;
-		<a href="twit_list.jsp">트윗</a>&nbsp;&nbsp;
+		${memberName} 회원님 반갑습니다.<br> 
+		<a href="bbsProcServlet?action=list&page=1">게시판</a>&nbsp;&nbsp; 
+		<a href="twit_list.jsp">트윗</a>&nbsp;&nbsp; 
 		<a href="/jspbook/member/memberProcServlet?action=logout">로그아웃</a>
 		<hr>
-		<table border="1" bordercolor="#1827CA" bgcolor="#D0A9F5" style="border-collapse: collapse;">
-			<tr bgcolor="#E3CEF6">
+		<table border="1" >
+			<tr>
 				<th>아이디</th>
 				<th>이름</th>
 				<th>생일</th>
 				<th>주소</th>
-				<th>액션</th>
+				<th>옵션</th>
 			</tr>
-			<%
-				for (MemberDTO member : list) {
-			%>
-			<tr>
-				<td><%=member.getId()%></td>
-				<td><%=member.getName()%></td>
-				<td><%=member.getBirthday()%></td>
-				<td><%=member.getAddress()%></td>
-				<%
-					//	action을 parameta로 받음
-					String  updateUri = "memberProcServlet?action=update&id="+member.getId();
-					String  deleteUri = "memberProcServlet?action=delete&id="+member.getId();
-				%>
-				<td>&nbsp;<button onclick="location.href='<%=updateUri%>'">수정</button>&nbsp;
-				<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;</td>
-			</tr>
-			<%
-					}
-			%>
+			<c:set var="mList" value="${requestScope.MemberList}" />
+			<c:forEach var="mem" items="${mList}">
+				<tr>
+					<td>${mem.id}</td>
+					<td>${mem.name}</td>
+					<td>${mem.birthday}</td>
+					<td>${mem.address}</td>
+					<td>&nbsp;
+						<button	onclick="location.href='memberProcServlet?action=update&id=${mem.id}'">수정</button>&nbsp;
+						<button	onclick="location.href='memberProcServlet?action=delete&id=${mem.id}'">삭제</button>&nbsp;
+					</td>
+				</tr>
+			</c:forEach>
 		</table>
-	<%-- 	<%
-			for (String bmPage : pageList)
-				out.print(bmPage);
-		%> --%>
-	</center>
+		<c:set var="mpageList" value="${requestScope.mpageList}" />
+		<c:forEach var="mpageNo" items="${mpageList}"> 
+		${mpageNo} 
+		</c:forEach>
+	</div>
 </body>
 </html>

@@ -20,11 +20,11 @@ public class BbsMember {
 
 	public String fullString() {
 		return "BbsFull [id=" + id + ", title=" + title + ", name=" + name + 
-				", date=" + date.substring(0, 16) + "\n         content=" + content + "]";
+				", date=" + date + "\n         content=" + content + "]";
 	}
 	@Override
 	public String toString() {
 		return "BbsMember [id=" + id + ", title=" + title + ", name=" + name + 
-				", date=" + date.substring(0, 16) + "]";
+				", date=" + date + "]";
 	}
 }

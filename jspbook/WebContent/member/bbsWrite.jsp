@@ -1,11 +1,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
-<%
-	BbsDAO bDao = new BbsDAO();
-	List<BbsMember> contentList = bDao.selectJoinAll(10);
-	bDao.close();
-%>
+<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,10 +18,7 @@ label span {
 </head>
 <body>
 	<center>
-		<%
-			request.setCharacterEncoding("UTF-8");
-			BbsDTO bDto = (BbsDTO) request.getAttribute("memberId");
-		%>
+		<c:set var="bm" value="${requestScope.bbsMember}"/>
 		<h3>글쓰기</h3>
 		<hr>
 		<br>

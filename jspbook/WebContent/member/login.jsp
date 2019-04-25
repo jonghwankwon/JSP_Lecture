@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -14,21 +15,11 @@ td {
 }
 </style>
 </head>
-<%
-	// loginProc.jsp를 보고 getParameter/getAttribute 정하기
-	String error = request.getParameter("error");//Parameter로 받을 때 
-	//	String error = (String) request.getAttribute("error");	//Attribute로 받을 때
-	if (error != null) {
-		//System.out.println(error);
-		out.println("<script>alert('" + error + "')</script>");
-	}
-%>
 <center>
 	<br>
 	<h3>로그인</h3>
 	<br>
 	<hr>
-	<!-- <form name="loginForm" action=/jspbook/member/loginProcServlet method=post> -->
 	<form name="loginForm"
 		action="/jspbook/member/memberProcServlet?action=login" method=post>
 		<table border="1" bordercolor="black">

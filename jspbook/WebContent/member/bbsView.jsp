@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
-<%
-	BbsMember bm = (BbsMember)request.getAttribute("bbsMember");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -34,6 +32,7 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 <div align="center">
 		<h2>게시글 상세보기</h2>
 		<hr>
+		<c:set var="bm" value="${requestScope.bbsMember}"/>
 			<table border="1">
 				<tr>
 					<th>항목</th>
@@ -41,33 +40,29 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 				</tr>
 				<tr>
 					<th>글번호</th>
-					<td><%=bm.getId()%></td>
+					<td>${bm.id}</td>
 				</tr>
 				<tr>
 					<th>제목</th>
-					<td><%=bm.getTitle()%></td>
+					<td>${bm.title}</td>
 				</tr>
 				<tr>
 					<th>글쓴이</th>
-					<td><%=bm.getName() %></td>
+					<td>${bm.name}</td>	
 				</tr>
 				<tr>
 					<th>수정일시</th>
-					<td><%=bm.getDate()%></td>
+					<td>${bm.date}</td>
 				</tr>
 				<tr>
 					<th>내용</th>
-					<td><%=bm.getContent()%></td>
+					<td>${bm.content}</td>
 				</tr>
 				<tr>
-					<%
-					String  updateUri = "bbsProcServlet?action=update&id="+bm.getId();
-					String  deleteUri = "bbsProcServlet?action=delete&id="+bm.getId();
-					%>
 					<td colspan="2">
-				<button onclick="location.href='<%=updateUri%>'">수정</button>&nbsp;
-				<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;
-				<input type=button value="뒤로가기" name="B3" onClick="history.back()"></td>
+				<button onclick="location.href='bbsProcServlet?action=update&id=${bm.id}'">수정</button>&nbsp;
+				<button onclick="location.href='bbsProcServlet?action=delete&id=${bm.id}'">삭제</button>&nbsp;
+				<input type=button value="뒤로가기" name="b1" onClick="history.back()"></td>
 				</tr>
 			</table>
 	</div>

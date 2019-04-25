@@ -62,21 +62,21 @@ public class BbsProc extends HttpServlet {
 			}
 			bDao = new BbsDAO();
 			int count = bDao.getCount();
-			if (count == 0)			// 데이터가 없을 때 대비
+			if (count == 0)			// 데이터가 없을 때 
 				count = 1;
 			int pageNo = (int)Math.ceil(count/10.0);
-			if (curPage > pageNo)	// 경계선에 걸렸을 때 대비
+			if (curPage > pageNo)	// 경계선에 걸렸을 때
 				curPage--;
 			session.setAttribute("currentBbsPage", curPage);
 			// 리스트 페이지의 하단 페이지 데이터 생성
 			String page = null;
-			page = "<a href=#>&laquo;</a>&nbsp;";
+			page = "<a href=#>&laquo; back</a>&nbsp;";
 			pageList.add(page);
 			for (int i=1; i<=pageNo; i++) {
 				page = "&nbsp;<a href=bbsProcServlet?action=list&page=" + i + ">" + i + "</a>&nbsp;";
 				pageList.add(page);
 			}
-			page = "&nbsp;<a href=#>&raquo;</a>";
+			page = "&nbsp;<a href=#>next &raquo;</a>";
 			pageList.add(page);
 			
 			List<BbsMember> bmList = bDao.selectJoinAll(curPage);
@@ -94,7 +94,6 @@ public class BbsProc extends HttpServlet {
 			bDao.writeBbs(bDto);
 			bDao.close();
 			response.sendRedirect("bbsProcServlet?action=list&page=1");
-			//response.sendRedirect("bbsList.jsp");
 			break;
 			
 		case "view":
