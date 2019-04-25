@@ -30,7 +30,7 @@ label span {
 		<hr>
 		<br>
 		<!-- <a href="bbsMain.jsp" >돌아가기</a> -->
-		<form name="bbscreateForm"
+		<form name="bbswriteForm"
 			action="/jspbook/member/bbsProcServlet?action=write" method=post>
 			<span>제목 : </span> <input type="text" name="title" width="50"><br><br>
 			<span>내용 : </span><textarea name="content" cols="40" rows="10"></textarea><br>

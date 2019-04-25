@@ -6,6 +6,11 @@
 	List<MemberDTO> list = mDao.selectAll();
 	mDao.close();
 %>
+<%
+	request.setCharacterEncoding("UTF-8");
+	List<BbsMember> bmList = (List<BbsMember>) request.getAttribute("bbsMemberList");
+	List<String> pageList = (List<String>) request.getAttribute("pageList");
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,10 +18,11 @@
 <title>메인 페이지</title>
 <style>
 table {
-	width: 100%;
+	width: 80%;
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
 }
+
 th, td {
 	border-bottom: 1px solid #444444;
 	padding: 10px;
@@ -36,7 +42,7 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 	<center>
 		<h2>회원 명단</h2>
 		<%=session.getAttribute("memberName")%> 회원님 반갑습니다.<br>
-		<a href="bbsMain.jsp">게시판</a>&nbsp;&nbsp;
+		<a href="bbsProcServlet?action=list&page=1">게시판</a>&nbsp;&nbsp;
 		<a href="twit_list.jsp">트윗</a>&nbsp;&nbsp;
 		<a href="/jspbook/member/memberProcServlet?action=logout">로그아웃</a>
 		<hr>
@@ -65,9 +71,13 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 				<button onclick="location.href='<%=deleteUri%>'">삭제</button>&nbsp;</td>
 			</tr>
 			<%
-				}
+					}
 			%>
 		</table>
+	<%-- 	<%
+			for (String bmPage : pageList)
+				out.print(bmPage);
+		%> --%>
 	</center>
 </body>
 </html>

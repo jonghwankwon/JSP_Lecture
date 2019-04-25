@@ -50,7 +50,7 @@ public class BbsDAO {
 			}
 		}	
 	}
-	//
+
 	public int getCount() {
 		String query = "select count(*) from bbs;";
 		PreparedStatement pStmt = null;
@@ -74,54 +74,7 @@ public class BbsDAO {
 		}
 		return count;
 	}
-	// 글쓰기
-	public void writeBbs(BbsDTO bDto) {
-		PreparedStatement pStmt = null;
-		String query = "insert into bbs (memberId, title, content) values(?, ?, ?);";
-		pStmt = null;
-		try {
-			pStmt = conn.prepareStatement(query);
-			pStmt.setInt(1, bDto.getMemberId());
-			pStmt.setString(2, bDto.getTitle());
-			pStmt.setString(3, bDto.getContent());		
-			pStmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (pStmt != null && !pStmt.isClosed()) 
-					pStmt.close();
-			} catch (SQLException se) {
-				se.printStackTrace();
-			}
-		}
-	}
-	// 수정
-	public BbsDTO updateBbs(BbsDTO bDto) {
-			PreparedStatement pStmt = null;
-			//String date = getCurrentDBTime();
-			String query = "update bbs set title=?, date=now(), content=? where id=?;";
-			pStmt = null;
-			try {
-				pStmt = conn.prepareStatement(query);
-				pStmt.setString(1, bDto.getTitle());
-				//pStmt.setString(2, date);
-				pStmt.setString(2, bDto.getContent());
-				pStmt.setInt(3, bDto.getId());
-				pStmt.executeUpdate();
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (pStmt != null && !pStmt.isClosed()) 
-						pStmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace();
-				}
-			}
-			return bDto;
-		}
-	//조회
+
 	public BbsDTO selectOne(int id) {
 		String query = "select * from bbs where id=?;";
 		PreparedStatement pStmt = null;
@@ -150,7 +103,53 @@ public class BbsDAO {
 		}
 		return bDto;
 	}
-	//삭제
+
+	public void updateBbs(BbsDTO bDto) {
+		PreparedStatement pStmt = null;
+		//String date = getCurrentDBTime();
+		String query = "update bbs set title=?, date=now(), content=? where id=?;";
+		pStmt = null;
+		try {
+			pStmt = conn.prepareStatement(query);
+			pStmt.setString(1, bDto.getTitle());
+			//pStmt.setString(2, date);
+			pStmt.setString(2, bDto.getContent());
+			pStmt.setInt(3, bDto.getId());
+			pStmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pStmt != null && !pStmt.isClosed()) 
+					pStmt.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+	}
+
+	public void writeBbs(BbsDTO bDto) {
+		PreparedStatement pStmt = null;
+		String query = "insert into bbs (memberId, title, content) values(?, ?, ?);";
+		pStmt = null;
+		try {
+			pStmt = conn.prepareStatement(query);
+			pStmt.setInt(1, bDto.getMemberId());
+			pStmt.setString(2, bDto.getTitle());
+			pStmt.setString(3, bDto.getContent());		
+			pStmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pStmt != null && !pStmt.isClosed()) 
+					pStmt.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+	}
+
 	public void deleteBbs(int id) {
 		String query = "delete from bbs where id=?;";
 		PreparedStatement pStmt = null;
@@ -169,7 +168,7 @@ public class BbsDAO {
 			}
 		}
 	}
-	//상세조회
+
 	public BbsMember ViewData(int id) {
 		String query = "select bbs.id, bbs.title, member.name, bbs.date, bbs.content from bbs " + 
 				"inner join member on bbs.memberId=member.id where bbs.id=?;";;
@@ -204,16 +203,19 @@ public class BbsDAO {
 	public List<BbsMember> selectJoinAll(int page) {
 		int offset = 0;
 		String query = null;
-		if(page == 0) {
-			query = "select bbs.id, bbs.title, member.name, bbs.date, bbs.content from bbs \" + \r\n" + 
-					"			\"inner join member on bbs.memberId=member.id order by bbs.id desc limit ?, 10;";
-			offset = (page -1) * 10;
+		if (page == 0) {	// page가 0이면 모든 데이터를 보냄
+			query = "select bbs.id, bbs.title, member.name, bbs.date from bbs " + 
+					"inner join member on bbs.memberId=member.id order by bbs.id desc;";
+		} else {			// page가 0이 아니면 해당 페이지 데이터만 보냄
+			query = "select bbs.id, bbs.title, member.name, bbs.date from bbs " + 
+					"inner join member on bbs.memberId=member.id order by bbs.id desc limit ?, 10;";
+			offset = (page - 1) * 10;
 		}
 		PreparedStatement pStmt = null;
 		List<BbsMember> bmList = new ArrayList<BbsMember>();
 		try {
 			pStmt = conn.prepareStatement(query);
-			if(page != 0)
+			if (page != 0)
 				pStmt.setInt(1, offset);
 			ResultSet rs = pStmt.executeQuery();
 			while (rs.next()) {	
@@ -237,7 +239,7 @@ public class BbsDAO {
 		}
 		return bmList;
 	}
-	//시간
+
 	public String getCurrentDBTime() {
 		String query = "select now();";
 		PreparedStatement pStmt = null;
@@ -262,7 +264,6 @@ public class BbsDAO {
 		return ts;
 	}
 
-	
 	public void close() {
 		try {
 			if (conn != null && !conn.isClosed())

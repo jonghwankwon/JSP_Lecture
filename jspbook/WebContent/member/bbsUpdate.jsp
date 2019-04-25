@@ -2,9 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="member.*" import="java.util.*"%>
 <%
-	BbsDAO bDao = new BbsDAO();
-	List<BbsMember> contentList = bDao.selectJoinAll(10);
-	bDao.close();
+	BbsMember bm = (BbsMember)request.getAttribute("bbsMember");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.xml.ws.RequestWrapper;
-
 
 @WebServlet("/member/bbsProcServlet")
 public class BbsProc extends HttpServlet {
@@ -31,107 +29,178 @@ public class BbsProc extends HttpServlet {
 	}
 	protected void doAction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		BbsDAO bDao = null;
+		BbsMember bMem = null;
 		BbsDTO bDto = null;
 		RequestDispatcher rd = null;
 		int id = 0;
+		int memberId = 0;
 		String title = null;
-		String date = null;
 		String content = null;
 		String message = null;
 		String url = null;
+		int curPage = 1;
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-		int memberId = (int)session.getAttribute("memberId");
+		// 세션이 만료되었으면 다시 로그인
+		try {
+			memberId = (int)session.getAttribute("memberId");
+		} catch (NullPointerException e) {
+			System.out.println("세션이 만료되었습니다.");
+		}
+		if (memberId == 0) {
+			rd = request.getRequestDispatcher("login.jsp");
+	        rd.forward(request, response);
+		}
+		
 		String action = request.getParameter("action");
+		List<String> pageList = new ArrayList<String>();
 		
-		
-		//글쓰기 | 2.조회 | 3.수정 | 4.삭제 | 5.상세조회 
 		switch(action) {
-		case "write":	//글쓰기
+		case "list":
+			if (!request.getParameter("page").equals("")) {
+				curPage = Integer.parseInt(request.getParameter("page"));
+			}
+			bDao = new BbsDAO();
+			int count = bDao.getCount();
+			if (count == 0)			// 데이터가 없을 때 대비
+				count = 1;
+			int pageNo = (int)Math.ceil(count/10.0);
+			if (curPage > pageNo)	// 경계선에 걸렸을 때 대비
+				curPage--;
+			session.setAttribute("currentBbsPage", curPage);
+			// 리스트 페이지의 하단 페이지 데이터 생성
+			String page = null;
+			page = "<a href=#>&laquo;</a>&nbsp;";
+			pageList.add(page);
+			for (int i=1; i<=pageNo; i++) {
+				page = "&nbsp;<a href=bbsProcServlet?action=list&page=" + i + ">" + i + "</a>&nbsp;";
+				pageList.add(page);
+			}
+			page = "&nbsp;<a href=#>&raquo;</a>";
+			pageList.add(page);
+			
+			List<BbsMember> bmList = bDao.selectJoinAll(curPage);
+			request.setAttribute("bbsMemberList", bmList);
+			request.setAttribute("pageList", pageList);
+			rd = request.getRequestDispatcher("bbsMain.jsp");
+	        rd.forward(request, response);
+			break;
+			
+		case "write":
 			title = request.getParameter("title");
-			content = request.getParameter("content");
-			bDto = new BbsDTO(memberId,title,content);
+			content = lf2Br(request.getParameter("content"));
+			bDto = new BbsDTO(memberId, title, content);
 			bDao = new BbsDAO();
 			bDao.writeBbs(bDto);
 			bDao.close();
-
-			response.sendRedirect("bbsMain.jsp");
+			response.sendRedirect("bbsProcServlet?action=list&page=1");
+			//response.sendRedirect("bbsList.jsp");
 			break;
-
-		case "update":	//수정
+			
+		case "view":
 			if (!request.getParameter("id").equals("")) {
 				id = Integer.parseInt(request.getParameter("id"));
 			}
 			bDao = new BbsDAO();
-			bDto = bDao.selectOne(id);	//DB에서 memberId를 가져와서 권한체크
-			bDao.close();	
-			if (memberId != bDto.getMemberId()) {	//bbsmemberId와 login한 memberId가 != 수정불가능 alert창 출력
-				message = "해당 게시글 " + id + " 에 대한 수정 권한이 없습니다.";
-				url = "bbsMain.jsp";
-				request.setAttribute("message", message);
-				request.setAttribute("url", url);
-				rd = request.getRequestDispatcher("alertMsg.jsp");
-				rd.forward(request, response);
-				break;
-			}	
-			request.setAttribute("bDto", bDto);
-			rd = request.getRequestDispatcher("bbsUpdate.jsp");
-			rd.forward(request, response);
-			break;
-
-		case "excute":	//수정 버튼 클릭 시
-			title = request.getParameter("title");
-			content = request.getParameter("content");
-			id = Integer.parseInt(request.getParameter("id"));
-			bDto.setTitle(title);
-			bDto.setContent(content);
-			bDto.setId(id);
-			bDao.updateBbs(bDto);
-			message = "글 " + title + " 이/가 수정 되었습니다.";
-			url = "bbsMain.jsp";
-			request.setAttribute("message", message);
-			request.setAttribute("url", url);
-			rd = request.getRequestDispatcher("alertMsg.jsp");
-			rd.forward(request, response);
-
-		case "view":	//상세조회
-			if (!request.getParameter("id").equals("")) {
-				id = Integer.parseInt(request.getParameter("id"));
-			}
-			bDto = bDao.selectOne(id);
+			bMem = bDao.ViewData(id);
 			bDao.close();
-			request.setAttribute("bDto", bDto);
+			
+			request.setAttribute("bbsMember", bMem);
 			rd = request.getRequestDispatcher("bbsView.jsp");
-			rd.forward(request, response);
+	        rd.forward(request, response);
 			break;
-
-		case "delete":	//삭제
+		
+		case "update":		// 수정 버튼 클릭 시
 			if (!request.getParameter("id").equals("")) {
 				id = Integer.parseInt(request.getParameter("id"));
 			}
 			bDao = new BbsDAO();
-			bDto = bDao.selectOne(id);	//DB에서 memberId를 가져와서 권한체크
-			bDao.close();	
-			if (memberId != bDto.getMemberId()) {
-				message = "id = " + id + " 에 대한 삭제 권한이 없습니다.";
-				url = "bbsMain.jsp";
+			bDto = bDao.selectOne(id);
+			if (bDto.getMemberId() != memberId) {
+				message = "id = " + id + " 에 대한 수정 권한이 없습니다.";
+				url = "bbsProcServlet?action=list&page=1";
 				request.setAttribute("message", message);
 				request.setAttribute("url", url);
 				rd = request.getRequestDispatcher("alertMsg.jsp");
 				rd.forward(request, response);
+				bDao.close();
 				break;
 			}
+			bMem = bDao.ViewData(id);
+			bDao.close();
+			
+			bMem.setContent(br2Lf(bMem.getContent()));
+			request.setAttribute("bbsMember", bMem);
+			rd = request.getRequestDispatcher("bbsUpdate.jsp");
+	        rd.forward(request, response);
+			break;
+			
+		case "execute":		// 데이터 수정 후 실행할 때
+			if (!request.getParameter("id").equals("")) {
+				id = Integer.parseInt(request.getParameter("id"));
+			}
+			title = request.getParameter("title");
+			content = lf2Br(request.getParameter("content"));
+			bDto = new BbsDTO(id, memberId, title, "", content);
 			bDao = new BbsDAO();
+			bDao.updateBbs(bDto);
+			bDao.close();
+			curPage = (int)session.getAttribute("currentBbsPage");
+			response.sendRedirect("bbsProcServlet?action=list&page=" + curPage);
+			break;
+			
+		case "delete":		// 삭제 버튼 클릭 시
+			if (!request.getParameter("id").equals("")) {
+				id = Integer.parseInt(request.getParameter("id"));
+			}
+			bDao = new BbsDAO();
+			bDto = bDao.selectOne(id);
+			curPage = (int)session.getAttribute("currentBbsPage");
+			if (bDto.getMemberId() != (Integer)session.getAttribute("memberId")) {
+				message = "id = " + id + " 에 대한 삭제 권한이 없습니다.";
+				url = "bbsProcServlet?action=list&page=" + curPage;
+				request.setAttribute("message", message);
+				request.setAttribute("url", url);
+				rd = request.getRequestDispatcher("alertMsg.jsp");
+				rd.forward(request, response);
+				bDao.close();
+				break;
+			}
 			bDao.deleteBbs(id);
 			bDao.close();
 			message = "id = " + id + " 이/가 삭제되었습니다.";
-			url = "bbsMain.jsp";
+			url = "bbsProcServlet?action=list&page=1";
 			request.setAttribute("message", message);
 			request.setAttribute("url", url);
 			rd = request.getRequestDispatcher("alertMsg.jsp");
-			rd.forward(request, response);
-
+			rd.forward(request, response);	
+			break;
+			
 		default:
 		}
+	}
+	
+	protected String lf2Br(String content) {
+		StringBuffer sb = new StringBuffer();
+		for (int i=0; i<content.length(); i++) {
+			if (content.charAt(i) == '\r') {
+				sb.append("<br>");
+				sb.append(content.charAt(i));
+			} else
+				sb.append(content.charAt(i));
+		}
+		return sb.toString();
+	}
+	protected String br2Lf(String content) {
+		StringBuffer sb = new StringBuffer(content);
+		int count = 0;
+		while (true) {
+			int index = sb.indexOf("<br>", count);
+			if (index < 0)
+				break;
+			sb.delete(index, index+4);
+			count += 4;
+		}
+		return sb.toString();
 	}
 }
