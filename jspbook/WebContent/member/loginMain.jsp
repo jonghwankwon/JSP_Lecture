@@ -36,6 +36,7 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 		${memberName} 회원님 반갑습니다.<br> 
 		<a href="bbsProcServlet?action=list&page=1">게시판</a>&nbsp;&nbsp; 
 		<a href="twit_list.jsp">트윗</a>&nbsp;&nbsp; 
+		<a href="fileServlet?faction=member">다운로드</a>&nbsp;&nbsp; 
 		<a href="/jspbook/member/memberProcServlet?action=logout">로그아웃</a>
 		<hr>
 		<table border="1" >

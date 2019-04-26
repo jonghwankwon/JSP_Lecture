@@ -14,7 +14,8 @@
 <body>
 	<div align="center">
 		<h2>My Simple Twitter!!</h2>
-		<a href="loginMain.jsp">회원 목록으로</a>
+		<a href="bbsProcServlet?action=list&page=1">게시판</a>&nbsp;&nbsp; 
+		<a href="memberProcServlet?action=list&mpage=1">회원 목록</a>
 		<hr>
 		<form action="/jspbook/member/twitServlet" method="POST">
 			<!-- 세션에 저장된 이름 출력 -->

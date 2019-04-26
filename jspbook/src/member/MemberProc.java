@@ -13,9 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- * Servlet implementation class MemberProc
- */
 @WebServlet("/member/memberProcServlet")
 public class MemberProc extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -46,7 +43,6 @@ public class MemberProc extends HttpServlet {
 		RequestDispatcher rd = null;
 		int id = 0;
 		int mcurPage = 1;
-		int memberId = 0;
 		String password = null;
 		String name = null;
 		String birthday = null;
@@ -55,7 +51,6 @@ public class MemberProc extends HttpServlet {
 		String url = null;
 		request.setCharacterEncoding("UTF-8");
 		HttpSession session = request.getSession();
-		
 		String action = request.getParameter("action");
 		List<String> mpageList = new ArrayList<String>();
 		

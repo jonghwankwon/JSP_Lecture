@@ -1,5 +1,7 @@
 package member;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MemberDAO {
 	public static final int ID_PASSWORD_MATCH = 1;
@@ -27,9 +31,34 @@ public class MemberDAO {
 			ex.printStackTrace();
 		}
     }
-    
-	public int verifyIdPassword(int id, String password) {
-		//System.out.println("verifyIdPassword(): " + id + ", " + password);
+    private static final Logger LOG = LoggerFactory.getLogger(MemberDAO.class);
+
+    // 데이터 다운
+    public String prepareDownload() {
+    	LOG.trace("");
+    	StringBuffer sb = new StringBuffer();
+    	List<MemberDTO> mList = selectAll(0); 
+    	
+    	try {
+    		FileWriter fw = new FileWriter("C:/Temp/Member_List.csv");
+    		String head = "아이디,이름,생년월일,주소\r\n";
+    		sb.append(head);
+    		fw.write(head);
+    		for(MemberDTO mDto : mList) {
+    			String line = mDto.getId() + " | " + mDto.getName() + " | " + mDto.getBirthday() + " | " + mDto.getAddress() + "\r\n";
+    			sb.append(line);
+    			fw.write(line);
+    		}
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	return sb.toString();
+    	
+    }
+
+    public int verifyIdPassword(int id, String password) {
 		String query = "select hashed from member where id=?;";
 		PreparedStatement pStmt = null;
 		ResultSet rs = null;
@@ -211,6 +240,8 @@ public class MemberDAO {
     	List<MemberDTO> memberList = new ArrayList<MemberDTO>();
     	try {
 			pStmt = conn.prepareStatement(query);
+			if (mPage != 0)
+				pStmt.setInt(1, offset);
 			ResultSet rs = pStmt.executeQuery();
 			
 			while (rs.next()) {

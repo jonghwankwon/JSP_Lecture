@@ -1,5 +1,7 @@
 package member;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,11 +11,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class BbsDAO {
 	private static final String USERNAME = "javauser";
 	private static final String PASSWORD = "javapass";
 	private static final String URL = "jdbc:mysql://localhost:3306/world?verifyServerCertificate=false&useSSL=false";
 	private Connection conn;
+	private static final Logger LOG = LoggerFactory.getLogger(BbsDAO.class);
 
 	public BbsDAO() {
 		try {
@@ -23,6 +29,30 @@ public class BbsDAO {
 			ex.printStackTrace();
 		}
 	}
+	//파일 다운로드
+	public String prepareDownload() {
+    	LOG.trace("");
+    	StringBuffer sb = new StringBuffer();
+    	List<BbsMember> bmList = selectJoinAll(0); 
+    	
+    	try {
+    		FileWriter fw = new FileWriter("C:/Temp/Bbs_List.csv");
+    		String head = "글번호,제목,글쓴이,내용,최종수정일\n";
+    		sb.append(head);
+    		fw.write(head);
+    		for(BbsMember bDto : bmList) {
+    			String line = bDto.getId() + " | " + bDto.getTitle()+ " | " + bDto.getName() + " | " + bDto.getContent()+ " | " +bDto.getDate()+ "\r\n";
+    			sb.append(line);
+    			fw.write(line);
+    		}
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	return sb.toString();
+    }
+	
 	//생성
 	public void createBbsTable() {
 		String query = "create table if not exists bbs (" + 

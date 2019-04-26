@@ -11,6 +11,7 @@ table {
 	width: 80%;
 	border-top: 1px solid #444444;
 	border-collapse: collapse;
+	margin-bottom: 5%;
 }
 
 th, td {
@@ -35,6 +36,7 @@ th:nth-child(2n+1), td:nth-child(2n+1) {
 		<a href="bbsWrite.jsp">글쓰기</a>&nbsp;&nbsp; 
 		<a href="twit_list.jsp">트윗</a>&nbsp;&nbsp; 
 		<a href="memberProcServlet?action=list&mpage=1">회원목록</a>&nbsp;&nbsp;
+		<a href="fileServlet?faction=bbs">다운로드</a>&nbsp;&nbsp; 
 		<a href="memberProcServlet?action=logout">로그아웃</a>
 		<hr>
 		<table border="1" style="border-collapse: collapse;">

@@ -22,7 +22,6 @@ label span {
 		<h3>글쓰기</h3>
 		<hr>
 		<br>
-		<!-- <a href="bbsMain.jsp" >돌아가기</a> -->
 		<form name="bbswriteForm"
 			action="/jspbook/member/bbsProcServlet?action=write" method=post>
 			<span>제목 : </span> <input type="text" name="title" width="50"><br><br>

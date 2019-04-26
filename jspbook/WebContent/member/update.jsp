@@ -7,32 +7,62 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>회원 가입</title>
 <style>
-label span {
-	display: inline-block;
-	width: 100px;
+table {
+	width: 50%;
+	border-top: 1px solid #444444;
+	border-collapse: collapse;
+}
+
+th, td {
+	border-bottom: 1px solid #444444;
+	padding: 10px;
 	text-align: center;
-	padding: 15px;
+}
+
+th:nth-child(2n), td:nth-child(2n) {
+	background-color: #bbdefb;
+}
+
+th:nth-child(2n+1), td:nth-child(2n+1) {
+	background-color: #e3f2fd;
 }
 </style>
 </head>
 <body>
 	<center>
-	<h3>회원 수정</h3>
-	<hr>
-	<c:set var="member" value="${requsetScope.member }"/>
-	<form name="updateForm" action="/jspbook/member/memberProcServlet?action=execute" method=post>
-		<input type="hidden" id="id" name="id" value="${member.id }"><br>
-		<label><span>아이디:</span>
-			${member.id }</label><br>
-		<label><span>이름:</span>
-			<input type="text" name="name" value="${member.name }" size="10"></label><br>
-		<label><span>생일:</span>
-			<input type="text" name="birthday" value="${member.birthday }" size="10"></label><br>
-		<label><span>주소:</span>
-			<input type="text" name="address" value="${member.address }" size="30"></label><br>
-		<label><span></span><input type="submit" value="회원 수정" name="B1">&nbsp;&nbsp;
-			<input type="reset" value="재작성" name="B2"></label>
-	</form>
+		<h3>회원 수정</h3>
+		<hr>
+		<c:set var="member" value="${requsetScope.member }" />
+		<form name="updateForm"
+			action="/jspbook/member/memberProcServlet?action=execute" method=post>
+			<input type="hidden" id="id" name="id" value="${member.id }">
+			<table>
+				<tr>
+					<th>아이디:</th>
+					<th>${member.id }</th>
+				</tr>
+				<tr>
+					<th>이름:</th>
+					<th><input type="text" name="name" value="${member.name }"
+						size="10"></th>
+				</tr>
+				<tr>
+					<th>생일:</th>
+					<th><input type="text" name="birthday"
+						value="${member.birthday }" size="10"></th>
+				</tr>
+				<tr>
+					<th>주소:</th>
+					<th><input type="text" name="address"
+						value="${member.address }" size="30"></th>
+				</tr>
+				<tr>
+					<th colspan="2"><input type="submit" value="회원 수정" name="B1">&nbsp;&nbsp;
+						<input type="reset" value="재작성" name="B2">&nbsp;&nbsp; <input
+						type=button value="뒤로가기" name="B3" onClick="history.back()">
+				</tr>
+			</table>
+		</form>
 	</center>
 </body>
 </html>
