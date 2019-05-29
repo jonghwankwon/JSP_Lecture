@@ -14,12 +14,10 @@ table {
 	text-align: center;
 	background-color: pink;
 }
-
 td {
 	height: 40px;
 	border: 1px solid;
 }
-
 input {
 	font-size: 20px;
 }

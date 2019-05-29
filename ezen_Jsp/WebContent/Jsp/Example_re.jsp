@@ -38,8 +38,8 @@ input {
 					<td colspan="4">
 						<%
 							int total = 0;
-							String product[] = request.getParameterValues("product");
-							for (String p : product) {
+							String products[] = request.getParameterValues("product");
+							for (String p : products) {
 								int n = Integer.parseInt(p);
 								switch (n) {
 								case 20000:

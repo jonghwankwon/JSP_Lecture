@@ -26,7 +26,7 @@ input {
 <body>
 <center>
 	<h2>설 문 조 사</h2>
-	<form method="post" action="form_re.jsp">
+	<form method="post" action="Form_re.jsp">
 		<table>
 			<tr>
 				<td>이름</td>

@@ -28,7 +28,7 @@ input {
 		request.setCharacterEncoding("utf-8");
 
 		String name = request.getParameter("name");
-
+		
 		String sex = request.getParameter("sex");
 		if (sex.equals("male")) {
 			sex = "남자";
@@ -46,7 +46,7 @@ input {
 				</tr>
 				<tr>
 					<td>성별</td>
-					<td><%=sex%></td>
+					<td><%=sex %></td>
 				</tr>
 				<tr>
 					<td>좋아하는 계절</td>
